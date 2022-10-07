@@ -12,10 +12,6 @@ resource "aws_internet_gateway" "sec0_gw" {
 resource "aws_route_table" "sec0_rtb" {
   vpc_id = aws_vpc.proj_vpc.id
   //TODO maybe specify the route
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.sec0_gw.id
-  }
   tags = {
     "Name" = "sec0_rtb"
   }

@@ -59,11 +59,3 @@ variable "inst_db_port" {
   type        = string
   default     = "3306"
 }
-
-
-#STEP global
-variable "glob_instance_access_key_file" {
-  description = "instance access key"
-  type        = string
-  default     = "10.0.1.48"
-}

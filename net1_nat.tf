@@ -8,35 +8,34 @@
 #   }
 # }
 
-resource "aws_subnet" "sec1_sn" {
+resource "aws_subnet" "sec1_sn_pub" {
   vpc_id                  = aws_vpc.proj_vpc.id
   cidr_block              = var.sec1_subnet_cidr
   map_public_ip_on_launch = true
   availability_zone       = var.availability_zone
 
   tags = {
-    Name = "sec1_sn"
+    Name = "sec1_sn_pub"
   }
 
 }
 
-resource "aws_route_table" "sec1_nat_rtb" {
+resource "aws_route_table" "sec1_nat_rtb_pub" {
   vpc_id = aws_vpc.proj_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    #gateway_id = aws_internet_gateway.sec0_gw.id
     gateway_id = aws_internet_gateway.sec0_gw.id
   }
 
   tags = {
-    "Name" = "sec1_nat_rtb"
+    "Name" = "sec1_nat_rtb_pub"
   }
 }
 
 resource "aws_route_table_association" "sec1_rtb_sn_nat_ass" {
-  subnet_id      = aws_subnet.sec1_sn.id
-  route_table_id = aws_route_table.sec1_nat_rtb.id
+  subnet_id      = aws_subnet.sec1_sn_pub.id
+  route_table_id = aws_route_table.sec1_nat_rtb_pub.id
 }
 
 ########## nat zone
@@ -52,7 +51,7 @@ resource "aws_eip" "sec1_eip_db" {
 
 resource "aws_nat_gateway" "sec1_ngw" {
   allocation_id = aws_eip.sec1_eip_db.id
-  subnet_id     = aws_subnet.sec1_sn.id
+  subnet_id     = aws_subnet.sec1_sn_pub.id
 
   tags = {
     Name = "sec1_ngw"
@@ -71,8 +70,7 @@ resource "aws_route_table" "sec1_rtb" {
   vpc_id = aws_vpc.proj_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    #gateway_id = aws_internet_gateway.sec0_gw.id
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.sec1_ngw.id
   }
 
@@ -108,34 +106,6 @@ resource "aws_security_group" "sec1_sg" {
   name        = "allow_db"
   description = "Allow db ec2 download mariadb"
   vpc_id      = aws_vpc.proj_vpc.id
-  #   ingress {
-  #     description = "HTTPS"
-  #     from_port   = 443
-  #     to_port     = 443
-  #     protocol    = "tcp"
-  #     cidr_blocks = ["0.0.0.0/0"]
-  #   }
-  #   ingress {
-  #     description = "HTTP"
-  #     from_port   = 80
-  #     to_port     = 80
-  #     protocol    = "tcp"
-  #     cidr_blocks = ["0.0.0.0/0"]
-  #   }
-  #   ingress {
-  #     description = "SSH"
-  #     from_port   = 22
-  #     to_port     = 22
-  #     protocol    = "tcp"
-  #     cidr_blocks = ["0.0.0.0/0"]
-  #   }
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   egress {
     from_port   = 0

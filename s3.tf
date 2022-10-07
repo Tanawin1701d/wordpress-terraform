@@ -20,7 +20,6 @@ resource "aws_iam_role" "ws_role" {
   }
 }
 
-
 resource "aws_iam_role_policy" "s3_policy" {
   name = "s3_policy"
   role = aws_iam_role.ws_role.id
@@ -29,11 +28,34 @@ resource "aws_iam_role_policy" "s3_policy" {
       "Version" : "2012-10-17",
       "Statement" : [
         {
+          "Sid" : "ObjectLevel",
           "Effect" : "Allow",
           "Action" : [
-            "s3:*",
-            "s3-object-lambda:*"
+            "s3:PutObject",
+            "s3:GetObject",
+            "s3:DeleteObject",
+            "s3:PutObjectAcl"
           ],
+          "Resource" : "arn:aws:s3:::${var.bucket_name}/*"
+        },
+        {
+          "Sid" : "BucketLevel",
+          "Effect" : "Allow",
+          "Action" : [
+            "s3:GetBucketPublicAccessBlock",
+            "s3:PutBucketPublicAccessBlock",
+            "s3:GetBucketOwnershipControls",
+            "s3:PutBucketOwnershipControls",
+            "s3:CreateBucket",
+            "s3:ListBucket",
+            "s3:GetBucketLocation"
+          ],
+          "Resource" : "arn:aws:s3:::*"
+        },
+        {
+          "Sid" : "AccountLevel",
+          "Effect" : "Allow",
+          "Action" : "s3:ListAllMyBuckets",
           "Resource" : "*"
         }
       ]
@@ -47,14 +69,16 @@ resource "aws_iam_instance_profile" "ws_s3_iam_profile" {
 
 }
 
-
 resource "aws_s3_bucket" "ws_s3_bucket" {
-  bucket = var.bucket_name
-  acl    = "private"
-
-
+  bucket        = var.bucket_name
+  force_destroy = true
   tags = {
     Name = var.bucket_name
   }
 
+}
+
+resource "aws_s3_bucket_acl" "s3_acl" {
+  bucket = aws_s3_bucket.ws_s3_bucket.id
+  acl    = "private"
 }

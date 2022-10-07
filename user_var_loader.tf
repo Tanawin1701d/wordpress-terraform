@@ -4,7 +4,7 @@ variable "region" {
   default     = "ap-southeast-1"
 }
 variable "availability_zone" {
-  description = "ami"
+  description = "availability_zone"
   type        = string
   default     = "ap-southeast-1a"
 }
@@ -42,4 +42,98 @@ variable "admin_pass" {
   description = "admin_pass"
   type        = string
   default     = "admin"
+}
+
+variable "ec2_pubKey_src" {
+  description = "ec2 public key src"
+  default     = "/home/tanawin/.aws/mykey2.pub"
+}
+
+//////aws config
+
+variable "aws_profile" {
+  description = "aws profile name(acces key NAME)"
+  type        = string
+  default     = "god"
+}
+
+///////s3 config
+variable "s3_force_destroy" {
+  description = "title of wordpress"
+  type        = bool
+  default     = false
+}
+
+
+#STEP instance type
+
+variable "inst_type" {
+  description = "instance type "
+  type        = string
+  default     = "t2.micro"
+}
+
+#STEP wp config
+
+variable "wp_title" {
+  description = "title of wordpress"
+  type        = string
+  default     = "test"
+}
+
+
+
+variable "wp_email" {
+  description = "email of wordpress"
+  type        = string
+  default     = "example@gmail.com"
+}
+
+#WordPress Security Key Generator
+variable "wp_AUTH_KEY" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
+}
+
+variable "wp_SECURE_AUTH_KEY" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
+}
+
+variable "wp_LOGGED_IN_KEY" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
+}
+
+variable "wp_NONCE_KEY" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
+}
+
+variable "wp_AUTH_SALT" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
+}
+
+variable "wp_SECURE_AUTH_SALT" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
+}
+
+variable "wp_LOGGED_IN_SALT" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
+}
+
+variable "wp_NONCE_SALT" {
+  description = "wp security"
+  type        = string
+  default     = "put your unique phrase here"
 }
